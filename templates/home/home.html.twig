@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home - Embaralhando{% endblock %}
+
+{% block stylesheets %}
+    <link href="{{ asset('style/home.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="mainMenu">
+            <img class="imageContainer" src="{{ asset('images/homeImage.webp') }}" alt="Descrição da imagem" />
+            <h1 class="title">Embaralhando</h1>
+        </div>
+
+        <a href="{{ path('app_game') }}">
+            <button class="btn">
+                <img src="{{ asset('images/butons/botao-play.png') }}" alt="Ícone" class="btn-icon">
+            </button>
+        </a>
+
+
+        <footer class="footer">
+            <p>Copyright © 2024 <span class="companyName">Apps4Society</span>. All rights reserved.</p>
+        </footer>
+    </div>
+{% endblock %}

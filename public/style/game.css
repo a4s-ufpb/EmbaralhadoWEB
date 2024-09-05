@@ -1,0 +1,37 @@
+.game-container {
+    text-align: center;
+    margin-top: 50px;
+}
+
+img {
+    width: 150px;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.word-container, .letters-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.drop-box, .letter-box {
+    width: 50px;
+    height: 50px;
+    margin: 5px;
+    border: 2px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.drop-box {
+    background-color: #f0f0f0; /* Fundo para caixas vazias */
+    border: 2px dashed #cccccc; /* Bordas visíveis para as caixas vazias */
+}
+
+.letter-box {
+    background-color: #ffffff; /* Fundo para as letras embaralhadas */
+}

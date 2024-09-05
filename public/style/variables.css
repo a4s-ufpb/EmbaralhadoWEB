@@ -1,0 +1,7 @@
+:root {
+    --main-background-color: rgb(6, 63, 6);
+    --button-background-color: rgba(20, 208, 20, 0.47);
+    --button-background-color-hover: #fff;
+    --main-font-color: #fff;
+    --font-family: 'Poppins', sans-serif;
+}

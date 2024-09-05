@@ -1,0 +1,115 @@
+@import url('variables.css');
+
+body {
+    background-color: var(--main-background-color);
+    color: var(--main-font-color);
+    font-family: var(--font-family), serif;
+}
+
+.btn {
+    background-color: var(--button-background-color);
+    color: var(--main-font-color);
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: var(--button-background-color-hover);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    border: none;
+    font-family: var(--font-family), serif;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--main-background-color);
+    height: 100vh; /* Isso garantirá que a div preencha toda a altura da tela */
+    padding: 20px;
+}
+
+.title {
+    color: var(--main-font-color);
+    font-size: 2rem;
+    text-shadow: 5px 5px 8px rgba(0, 0, 0, 0.5);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.btn-container {
+    display: flex;
+    gap: 20px; /* Espaçamento entre os botões */
+    justify-content: center; /* Centraliza os botões horizontalmente */
+}
+
+.btn {
+    background-color: var(--button-background-color);
+    border-radius: 50%; /* Faz o botão ficar redondo */
+    width: 50px; /* A largura e a altura são iguais para formar um círculo */
+    height: 50px;
+    margin: 10px;
+    box-shadow: 0 8px 5px rgba(7, 55, 122, 0.25);
+    cursor: pointer;
+    display: flex;
+    align-items: center; /* Centraliza verticalmente */
+    justify-content: center; /* Centraliza horizontalmente */
+    transition: background-color 0.3s ease;
+}
+
+.btn img {
+    width: 24px; /* Tamanho do ícone */
+    height: 24px;
+}
+
+.btn:hover {
+    background-color: var(--button-background-color-hover);
+}
+
+.imageContainer {
+    max-width: 70vh;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.footer {
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .title {
+        font-size: 1.2rem;
+        padding: 0.3rem;
+        margin: 0.5rem 0;
+    }
+
+    .btn-container {
+        flex-direction: column; /* Botões em coluna em telas menores */
+    }
+
+    .btn {
+        width: 80%;
+        font-size: 1.2rem;
+    }
+
+    .imageContainer {
+        max-width: 50%;
+        margin: 0 auto;
+    }
+
+    .container {
+        padding: 1rem;
+        text-align: center;
+    }
+}

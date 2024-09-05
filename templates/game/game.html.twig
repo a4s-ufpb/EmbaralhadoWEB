@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Game - Embaralhando{% endblock %}
+
+{% block stylesheets %}
+    <link href="{{ asset('style/game.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+    <div class="game-container">
+        <img src="{{ asset(jsonData.image) }}" alt="Imagem do objeto" />
+
+        <div class="word-container">
+            {% set sizeWord = jsonData.word|split('') %}
+            {% for letter in sizeWord %}
+                <div class="drop-box" ondrop="drop(event)" ondragover="allowDrop(event)">
+                    {{ "?" }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="letters-container">
+            {% set shuffledLetters = jsonData.word|split('')|shuffle %}
+            {% for letter in shuffledLetters %}
+                <div class="letter-box" draggable="true" ondragstart="drag(event)" id="letter-{{ loop.index }}">
+                    {{ letter }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div id="message" style="display: none;"></div>
+    </div>
+
+    <script>
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            var data = ev.dataTransfer.getData("text");
+            var draggedElement = document.getElementById(data);
+
+            if (ev.target.innerHTML.trim() === "?") {
+                ev.target.innerHTML = draggedElement.innerHTML;
+                draggedElement.style.visibility = "hidden";
+                console.log("Letra colocada no lugar correto.");
+            } else {
+                var currentLetterInBox = ev.target.innerHTML.trim();
+                ev.target.innerHTML = draggedElement.innerHTML;
+
+                draggedElement.innerHTML = currentLetterInBox;
+                draggedElement.style.visibility = "visible";
+                console.log("Trocando as letras.");
+            }
+
+            checkCompletion();
+        }
+
+        function checkCompletion() {
+            var dropBoxes = document.querySelectorAll('.drop-box');
+            var completedWord = Array.from(dropBoxes).map(function(box) {
+                return box.innerHTML.trim();
+            }).join('');
+
+            var originalWord = "{{ jsonData.word }}".trim();
+
+            var allBoxesFilled = Array.from(dropBoxes).every(function(box) {
+                return box.innerHTML.trim() !== "?";
+            });
+
+            if (allBoxesFilled) {
+                var messageElement = document.getElementById("message");
+                if (completedWord === originalWord) {
+                    messageElement.style.display = "block";
+                    messageElement.style.color = "green";
+                    messageElement.innerHTML = "Parabéns! Você acertou a palavra!";
+                } else {
+                    messageElement.style.display = "block";
+                    messageElement.style.color = "red";
+                    messageElement.innerHTML = "Ops! Você errou a palavra. Tente novamente.";
+                }
+            }
+        }
+    </script>
+{% endblock %}
