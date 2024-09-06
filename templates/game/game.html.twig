@@ -8,83 +8,147 @@
 
 {% block body %}
     <div class="game-container">
-        <img src="{{ asset(jsonData.image) }}" alt="Imagem do objeto" />
-
-        <div class="word-container">
-            {% set sizeWord = jsonData.word|split('') %}
-            {% for letter in sizeWord %}
-                <div class="drop-box" ondrop="drop(event)" ondragover="allowDrop(event)">
-                    {{ "?" }}
-                </div>
-            {% endfor %}
+        <!-- A palavra atual será exibida aqui -->
+        <div id="word-group">
+            <img id="word-image" src="" alt="Imagem do objeto" />
+            <div class="word-container" id="word-container"></div>
+            <div class="letters-container" id="letters-container"></div>
         </div>
 
-        <div class="letters-container">
-            {% set shuffledLetters = jsonData.word|split('')|shuffle %}
-            {% for letter in shuffledLetters %}
-                <div class="letter-box" draggable="true" ondragstart="drag(event)" id="letter-{{ loop.index }}">
-                    {{ letter }}
-                </div>
-            {% endfor %}
-        </div>
-
+        <!-- Mensagem de resultado -->
         <div id="message" style="display: none;"></div>
+
+        <!-- Botão para reiniciar o jogo (aparece quando as 10 palavras forem completadas) -->
+        <a href="{{ path('app_game') }}" id="next-button" style="display: none;">
+            <button class="btn">
+                Jogar Novamente
+            </button>
+        </a>
     </div>
 
     <script>
+        let words = {{ words|json_encode|raw }}; // Todas as palavras aleatórias passadas pelo controlador
+        let currentIndex = 0; // Índice da palavra atual
+
+        // Função para carregar a próxima palavra
+        function loadNextWord() {
+            if (currentIndex >= words.length) {
+                // Se todas as palavras foram completadas, exibe a mensagem de conclusão e o botão de reinício
+                document.getElementById("message").innerHTML = "Parabéns! Você completou todas as palavras!";
+                document.getElementById("message").style.color = "green";
+                document.getElementById("message").style.display = "block";
+                document.getElementById("next-button").style.display = "inline-block";
+                return;
+            }
+
+            // Atualiza a imagem e as caixas de letras para a palavra atual
+            let currentWord = words[currentIndex];
+            document.getElementById("word-image").src = currentWord.image;
+
+            let wordContainer = document.getElementById("word-container");
+            let lettersContainer = document.getElementById("letters-container");
+
+            wordContainer.innerHTML = "";
+            lettersContainer.innerHTML = "";
+
+            // Preenche as caixas vazias na word-container
+            currentWord.word.split('').forEach(letter => {
+                let dropBox = document.createElement('div');
+                dropBox.classList.add('drop-box');
+                dropBox.innerHTML = "?";
+                dropBox.ondrop = drop;
+                dropBox.ondragover = allowDrop;
+                wordContainer.appendChild(dropBox);
+            });
+
+            // Preenche as letras embaralhadas na letters-container
+            shuffleLetters(currentWord.word);
+        }
+
+        // Função para embaralhar as letras e exibi-las
+        function shuffleLetters(word) {
+            let lettersContainer = document.getElementById("letters-container");
+            let shuffledLetters = word.split('').sort(() => 0.5 - Math.random());
+            lettersContainer.innerHTML = "";
+            shuffledLetters.forEach((letter, index) => {
+                let letterBox = document.createElement('div');
+                letterBox.classList.add('letter-box');
+                letterBox.draggable = true;
+                letterBox.ondragstart = drag;
+                letterBox.id = `letter-${index}`;
+                letterBox.innerHTML = letter;
+                lettersContainer.appendChild(letterBox);
+            });
+        }
+
+        // Função que permite o drop
         function allowDrop(ev) {
             ev.preventDefault();
         }
 
+        // Função de arrastar
         function drag(ev) {
             ev.dataTransfer.setData("text", ev.target.id);
         }
 
+        // Função de soltar
         function drop(ev) {
             ev.preventDefault();
-            var data = ev.dataTransfer.getData("text");
-            var draggedElement = document.getElementById(data);
+            let data = ev.dataTransfer.getData("text");
+            let draggedElement = document.getElementById(data);
 
             if (ev.target.innerHTML.trim() === "?") {
                 ev.target.innerHTML = draggedElement.innerHTML;
                 draggedElement.style.visibility = "hidden";
-                console.log("Letra colocada no lugar correto.");
-            } else {
-                var currentLetterInBox = ev.target.innerHTML.trim();
-                ev.target.innerHTML = draggedElement.innerHTML;
-
-                draggedElement.innerHTML = currentLetterInBox;
-                draggedElement.style.visibility = "visible";
-                console.log("Trocando as letras.");
+                checkCompletion();
             }
-
-            checkCompletion();
         }
 
+        // Verifica se a palavra foi completada corretamente
         function checkCompletion() {
-            var dropBoxes = document.querySelectorAll('.drop-box');
-            var completedWord = Array.from(dropBoxes).map(function(box) {
-                return box.innerHTML.trim();
-            }).join('');
+            let dropBoxes = document.querySelectorAll('.drop-box');
+            let completedWord = Array.from(dropBoxes).map(box => box.innerHTML.trim()).join('');
+            let originalWord = words[currentIndex].word.trim();
 
-            var originalWord = "{{ jsonData.word }}".trim();
-
-            var allBoxesFilled = Array.from(dropBoxes).every(function(box) {
-                return box.innerHTML.trim() !== "?";
-            });
+            let allBoxesFilled = Array.from(dropBoxes).every(box => box.innerHTML.trim() !== "?");
 
             if (allBoxesFilled) {
-                var messageElement = document.getElementById("message");
+                let messageElement = document.getElementById("message");
                 if (completedWord === originalWord) {
-                    messageElement.style.display = "block";
-                    messageElement.style.color = "green";
                     messageElement.innerHTML = "Parabéns! Você acertou a palavra!";
-                } else {
+                    messageElement.style.color = "green";
                     messageElement.style.display = "block";
+
+                    // Carrega a próxima palavra após 2 segundos
+                    setTimeout(() => {
+                        messageElement.style.display = "none";
+                        currentIndex++;
+                        loadNextWord();
+                    }, 2000);
+                } else {
+                    messageElement.innerHTML = "Ops! Você errou. As letras serão embaralhadas novamente!";
                     messageElement.style.color = "red";
-                    messageElement.innerHTML = "Ops! Você errou a palavra. Tente novamente.";
+                    messageElement.style.display = "block";
+
+                    // Limpa as caixas e embaralha as letras novamente após 2 segundos
+                    setTimeout(() => {
+                        messageElement.style.display = "none";
+                        clearDropBoxes();
+                        shuffleLetters(originalWord);
+                    }, 2000);
                 }
             }
         }
+
+        // Função para limpar as caixas de drop (drop-boxes)
+        function clearDropBoxes() {
+            let dropBoxes = document.querySelectorAll('.drop-box');
+            dropBoxes.forEach(box => {
+                box.innerHTML = "?"; // Redefine o conteúdo para "?"
+            });
+        }
+
+        // Carrega a primeira palavra ao iniciar o jogo
+        loadNextWord();
     </script>
 {% endblock %}
