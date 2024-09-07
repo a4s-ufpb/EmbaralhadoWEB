@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Adicionar Palavra{% endblock %}
+
+{% block body %}
+    <h1>Adicionar uma nova palavra para o contexto: {{ contexto.nome }}</h1>
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button class="btn btn-primary">Salvar</button>
+    {{ form_end(form) }}
+
+    <a href="{{ path('app_contexto_show', { 'id': contexto.id }) }}" class="btn btn-secondary">Voltar para o contexto</a>
+{% endblock %}

@@ -18,42 +18,31 @@ class MainController extends AbstractController
         ]);
     }
 
-    #[\Symfony\Component\Routing\Annotation\Route('/game', name: 'app_game')]
+    #[Route('/game', name: 'app_game')]
     public function startGame(): Response
     {
-        // Localiza o arquivo JSON na pasta public/json
-        $jsonPath = $this->getParameter('kernel.project_dir') . '/public/json/words.json';
+        // Carregar o conteúdo do JSON (substitua o caminho conforme necessário)
+        $jsonFilePath = $this->getParameter('kernel.project_dir') . '/public/json/words.json';
 
         // Verifica se o arquivo JSON existe
-        if (!file_exists($jsonPath)) {
+        if (!file_exists($jsonFilePath)) {
             throw $this->createNotFoundException('Arquivo JSON não encontrado.');
         }
 
-        // Carrega o conteúdo do arquivo JSON
-        $jsonContent = file_get_contents($jsonPath);
+        // Lê o conteúdo do JSON
+        $jsonContent = file_get_contents($jsonFilePath);
+        $jsonData = json_decode($jsonContent, true);  // Decodificar JSON para array associativo
 
-        // Decodifica o conteúdo do JSON
-        $jsonData = json_decode($jsonContent, true);
+        // Obter as palavras do JSON
+        $allWords = $jsonData['words'];
 
-        // Verifica se houve erro ao decodificar o JSON
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new \Exception('Erro ao decodificar o JSON: ' . json_last_error_msg());
-        }
+        // Randomizar palavras (exemplo com 3 palavras aleatórias)
+        shuffle($allWords); // Embaralha o array
+        $selectedWords = array_slice($allWords, 0, 3); // Seleciona as 3 primeiras palavras após embaralhar
 
-        // Verifica se há pelo menos 10 palavras
-        if (count($jsonData['words']) < 10) {
-            throw new \Exception('O arquivo JSON deve conter pelo menos 10 palavras.');
-        }
-
-        // Seleciona 10 palavras aleatórias
-        $randomKeys = array_rand($jsonData['words'], 10);
-        $randomWords = array_map(function ($key) use ($jsonData) {
-            return $jsonData['words'][$key];
-        }, $randomKeys);
-
-        // Passa as 10 palavras aleatórias para o template
+        // Passa os dados das palavras randomizadas para o template
         return $this->render('game/game.html.twig', [
-            'words' => $randomWords
+            'words' => $selectedWords
         ]);
     }
 

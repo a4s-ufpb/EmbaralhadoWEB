@@ -18,7 +18,20 @@
         <!-- Mensagem de resultado -->
         <div id="message" style="display: none;"></div>
 
-        <!-- Botão para reiniciar o jogo (aparece quando as 10 palavras forem completadas) -->
+        <a href="{{ path('app_home') }}">
+            <button class="btn">
+                <i class="bi bi-gear-fill"></i>
+            </button>
+        </a>
+
+        <br>
+
+        <a href="{{ path('app_contextChoice') }}">
+            <button class="btn">
+                <i class="bi bi-person-lines-fill"></i>
+            </button>
+        </a>
+        <!-- Botão para reiniciar o jogo (aparece quando todas as palavras forem completadas) -->
         <a href="{{ path('app_game') }}" id="next-button" style="display: none;">
             <button class="btn">
                 Jogar Novamente
@@ -27,7 +40,7 @@
     </div>
 
     <script>
-        let words = {{ words|json_encode|raw }}; // Todas as palavras aleatórias passadas pelo controlador
+        let words = {{ words|json_encode|raw }}; // Recebe todas as palavras aleatórias passadas pelo controlador
         let currentIndex = 0; // Índice da palavra atual
 
         // Função para carregar a próxima palavra

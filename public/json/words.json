@@ -1,64 +1,20 @@
 {
   "words": [
-    {
-      "word": "cavalo",
-      "image": "/images/homeImage.webp"
-    },
-    {
-      "word": "carro",
-      "image": "/images/homeImage.webp"
-    },
-    {
-      "word": "gato",
-      "image": "/images/homeImage.webp"
-    },
-    {
-      "word": "cachorro",
-      "image": "/images/homeImage.webp"
-    },
-    {
-      "word": "esquilo",
-      "image": "/images/homeImage.webp"
-    },
-    {
-      "word": "coelho",
-      "image": "/images/homeImage.webp"
-    },
-    {
-      "word": "rato",
-      "image": "/images/homeImage.webp"
-    },
-    {
-      "word": "vaca",
-      "image": "/images/homeImage.webp"
-    },
-    {
-      "word": "touro",
-      "image": "/images/homeImage.webp"
-    },
-    {
-      "word": "elefante",
-      "image": "/images/homeImage.webp"
-    },
-    {
-      "word": "girafa",
-      "image": "/images/homeImage.webp"
-    },
-    {
-      "word": "zebra",
-      "image": "/images/homeImage.webp"
-    },
-    {
-      "word": "leão",
-      "image": "/images/homeImage.webp"
-    },
-    {
-      "word": "tigre",
-      "image": "/images/homeImage.webp"
-    },
-    {
-      "word": "papagaio",
-      "image": "/images/homeImage.webp"
-    }
+      {
+        "word": "cavalo",
+        "image": "/images/homeImage.webp"
+      },
+      {
+        "word": "gato",
+        "image": "/images/homeImage.webp"
+      },
+      {
+        "word": "ferrari",
+        "image": "/images/homeImage.webp"
+      },
+      {
+        "word": "fusca",
+        "image": "/images/homeImage.webp"
+      }
   ]
 }

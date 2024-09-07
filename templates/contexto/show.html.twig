@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contexto: {{ contexto.nome }}{% endblock %}
+
+{% block body %}
+    <main>
+        <div class="container py-5">
+            <h1>Contexto: {{ contexto.nome }}</h1>
+
+            <div class="mb-3">
+                <a href="{{ path('app_palavra_new', { contexto: contexto.id }) }}" class="btn btn-primary">Adicionar Palavra</a>
+                <a href="{{ path('app_contexto_index') }}" class="btn btn-secondary">Voltar à Lista de Contextos</a>
+            </div>
+
+            <h2>Palavras</h2>
+
+            {% if contexto.palavras|length > 0 %}
+                <ul class="list-group">
+                    {% for palavra in contexto.palavras %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ palavra.palavra }}
+                            <form method="post" action="{{ path('app_palavra_delete', { id: palavra.id }) }}" onsubmit="return confirm('Tem certeza que deseja excluir esta palavra?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ palavra.id) }}">
+                                <button class="btn btn-danger btn-sm">Excluir</button>
+                            </form>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Este contexto ainda não possui palavras.</p>
+            {% endif %}
+        </div>
+    </main>
+{% endblock %}

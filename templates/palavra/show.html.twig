@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ contexto.nome }}{% endblock %}
+
+{% block body %}
+    <h1>Contexto: {{ contexto.nome }}</h1>
+
+    <h2>palavras Relacionadas</h2>
+    <ul>
+        {% for palavra in palavras %}
+            <li>{{ palavra.palavra }}</li>
+        {% else %}
+            <li>Sem palavras relacionadas a este contexto</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ path('app_palavra_new', { id: contexto.id }) }}" class="btn btn-success">Adicionar Nova palavra</a>
+    <a href="{{ path('app_contexto_index') }}" class="btn btn-primary">Voltar para a lista de Contextos</a>
+{% endblock %}

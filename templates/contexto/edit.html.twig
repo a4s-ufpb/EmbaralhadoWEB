@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editar Contexto{% endblock %}
+
+{% block body %}
+    <h1>Editar Contexto</h1>
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button class="btn btn-primary">Salvar</button>
+    {{ form_end(form) }}
+
+    <a href="{{ path('app_contexto_index') }}" class="btn btn-secondary">Voltar</a>
+{% endblock %}
