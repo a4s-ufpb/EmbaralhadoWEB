@@ -1,0 +1,26 @@
+.container-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1030; /* Define um valor de z-index mais alto para garantir que o navbar fique acima de todos os elementos */
+}
+
+.container-navbar header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e0e0e0;
+    z-index: 1031; /* Para garantir que o conteúdo não sobreponha o navbar */
+}
+
+.navbar .nav-link {
+    color: #555;
+}
+
+.navbar .nav-link.active {
+    color: #007bff;
+    font-weight: bold;
+}
+
+.content {
+    padding-top: 100px; /* Espaço para compensar a altura do navbar */
+}
