@@ -10,7 +10,6 @@
     <div class="game-container">
         <!-- A palavra atual será exibida aqui -->
         <div id="word-group">
-            <img id="word-image" src="" alt="Imagem do objeto" />
             <div class="word-container" id="word-container"></div>
             <div class="letters-container" id="letters-container"></div>
         </div>
@@ -18,29 +17,19 @@
         <!-- Mensagem de resultado -->
         <div id="message" style="display: none;"></div>
 
+        <!-- Botão para voltar para a home -->
         <a href="{{ path('app_home') }}">
-            <button class="btn">
-                <i class="bi bi-gear-fill"></i>
-            </button>
+            Voltar
         </a>
 
         <br>
 
-        <a href="{{ path('app_contextChoice') }}">
-            <button class="btn">
-                <i class="bi bi-person-lines-fill"></i>
-            </button>
-        </a>
-        <!-- Botão para reiniciar o jogo (aparece quando todas as palavras forem completadas) -->
-        <a href="{{ path('app_game') }}" id="next-button" style="display: none;">
-            <button class="btn">
-                Jogar Novamente
-            </button>
-        </a>
+
     </div>
 
     <script>
         let words = {{ words|json_encode|raw }}; // Recebe todas as palavras aleatórias passadas pelo controlador
+        console.log(words); // Exibe as palavras no console do navegador para debug
         let currentIndex = 0; // Índice da palavra atual
 
         // Função para carregar a próxima palavra
@@ -54,10 +43,8 @@
                 return;
             }
 
-            // Atualiza a imagem e as caixas de letras para a palavra atual
-            let currentWord = words[currentIndex];
-            document.getElementById("word-image").src = currentWord.image;
-
+            // Atualiza as caixas de letras para a palavra atual
+            let currentWord = words[currentIndex]; // Pega a palavra do objeto
             let wordContainer = document.getElementById("word-container");
             let lettersContainer = document.getElementById("letters-container");
 
@@ -65,7 +52,7 @@
             lettersContainer.innerHTML = "";
 
             // Preenche as caixas vazias na word-container
-            currentWord.word.split('').forEach(letter => {
+            currentWord.split('').forEach(letter => {
                 let dropBox = document.createElement('div');
                 dropBox.classList.add('drop-box');
                 dropBox.innerHTML = "?";
@@ -75,7 +62,7 @@
             });
 
             // Preenche as letras embaralhadas na letters-container
-            shuffleLetters(currentWord.word);
+            shuffleLetters(currentWord);
         }
 
         // Função para embaralhar as letras e exibi-las
@@ -121,7 +108,7 @@
         function checkCompletion() {
             let dropBoxes = document.querySelectorAll('.drop-box');
             let completedWord = Array.from(dropBoxes).map(box => box.innerHTML.trim()).join('');
-            let originalWord = words[currentIndex].word.trim();
+            let originalWord = words[currentIndex].trim(); // Pega a palavra do objeto
 
             let allBoxesFilled = Array.from(dropBoxes).every(box => box.innerHTML.trim() !== "?");
 

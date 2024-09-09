@@ -1,60 +1,52 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Controller;
 
+use App\Repository\ContextoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 
 class MainController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
     public function index(): Response
     {
-        return $this->render('home/home.html.twig', [
-
-        ]);
+        return $this->render('home/home.html.twig');
     }
 
-    #[Route('/game', name: 'app_game')]
-    public function startGame(): Response
+    #[Route('/jogo/{id}', name: 'app_jogo_contexto', methods: ['GET'])]
+    public function startGameWithContext(ContextoRepository $contextoRepository, int $id): Response
     {
-        // Carregar o conteúdo do JSON (substitua o caminho conforme necessário)
-        $jsonFilePath = $this->getParameter('kernel.project_dir') . '/public/json/words.json';
+        // Encontra o contexto pelo ID
+        $contexto = $contextoRepository->find($id);
 
-        // Verifica se o arquivo JSON existe
-        if (!file_exists($jsonFilePath)) {
-            throw $this->createNotFoundException('Arquivo JSON não encontrado.');
+        if (!$contexto) {
+            throw $this->createNotFoundException('Contexto não encontrado');
         }
 
-        // Lê o conteúdo do JSON
-        $jsonContent = file_get_contents($jsonFilePath);
-        $jsonData = json_decode($jsonContent, true);  // Decodificar JSON para array associativo
+        // Lógica do jogo para embaralhar palavras
+        $palavras = $contexto->getPalavras()->toArray();
 
-        // Obter as palavras do JSON
-        $allWords = $jsonData['words'];
+        // Transformar o array de objetos Palavra em um array de strings (somente a palavra)
+        $palavrasString = array_map(fn($palavra) => $palavra->getPalavra(), $palavras);
 
-        // Randomizar palavras (exemplo com 3 palavras aleatórias)
-        shuffle($allWords); // Embaralha o array
-        $selectedWords = array_slice($allWords, 0, 3); // Seleciona as 3 primeiras palavras após embaralhar
+        // Dump para verificar o array de palavras antes de embaralhar
+        dump($palavrasString);
 
-        // Passa os dados das palavras randomizadas para o template
+        // Embaralhar as palavras
+        shuffle($palavrasString);
+
+        // Dump para verificar o array de palavras após embaralhar
+        dump($palavrasString);
+
+        // Seleciona até 5 palavras (se existirem)
+        $selectedWords = array_slice($palavrasString, 0, 5);
+
+        // Passando o contextoId para o template do jogo
         return $this->render('game/game.html.twig', [
-            'words' => $selectedWords
+            'words' => $selectedWords,
+            'contextoId' => $id, // Passa o id do contexto para o template
         ]);
-    }
-
-    #[Route('/context', name: 'app_contextChoice')]
-    public function context(): Response
-    {
-        return $this->render('context/contextChoice.html.twig');
-    }
-
-    #[Route('/list', name: 'app_pointList')]
-    public function pointList(): Response
-    {
-        return $this->render('list/pointList.html.twig');
     }
 }

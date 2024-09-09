@@ -7,6 +7,7 @@
         <div class="album py-5 bg-body-tertiary">
             <div class="container">
                 <div class="d-flex justify-content-end mb-3">
+                    <!-- Botão para adicionar um novo contexto -->
                     <a href="{{ path('app_contexto_new') }}" class="btn btn-primary">Adicionar Novo Contexto</a>
                 </div>
 
@@ -14,15 +15,25 @@
                     {% for contexto in contextos %}
                         <div class="col">
                             <div class="card shadow-sm">
-                                <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Contexto" preserveAspectRatio="xMidYMid slice" focusable="false"><title>{{ contexto.nome }}</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">{{ contexto.nome|upper }}</text></svg>
+                                <!-- Card para exibir o nome do contexto -->
+                                <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Contexto" preserveAspectRatio="xMidYMid slice" focusable="false">
+                                    <title>{{ contexto.nome }}</title>
+                                    <rect width="100%" height="100%" fill="#55595c"></rect>
+                                    <text x="50%" y="50%" fill="#eceeef" dy=".3em">{{ contexto.nome|upper }}</text>
+                                </svg>
 
                                 <div class="card-body">
                                     <p class="card-text">Contexto: {{ contexto.nome }}</p>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="btn-group">
+                                            <!-- Botão para ver o contexto -->
                                             <a href="{{ path('app_contexto_show', { id: contexto.id }) }}" class="btn btn-sm btn-outline-secondary">Ver Contexto</a>
-                                            <a href="{{ path('app_palavra_new', { contexto: contexto.id }) }}" class="btn btn-sm btn-outline-secondary">Adicionar palavra</a>
+
+                                            <!-- Botão para começar o jogo, passando o id corretamente -->
+                                            <a href="{{ path('app_jogo_contexto', { id: contexto.id }) }}" class="btn btn-sm btn-outline-secondary">Começar Jogo</a>
                                         </div>
+
+                                        <!-- Botão para excluir o contexto -->
                                         <form method="post" action="{{ path('app_contexto_delete', { id: contexto.id }) }}" onsubmit="return confirm('Tem certeza que deseja deletar este contexto? Todas as palavras associadas serão apagadas!');">
                                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ contexto.id) }}">
                                             <button class="btn btn-sm btn-outline-danger">Excluir</button>
